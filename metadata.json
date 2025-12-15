@@ -1,0 +1,7 @@
+{
+  "name": "VaporJar: Memory Keeper",
+  "description": "A dreamy, vaporwave-styled digital jar to store and retrieve your text, sketches, and audio memories.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
