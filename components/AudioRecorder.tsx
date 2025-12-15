@@ -72,47 +72,47 @@ export const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSave }) => {
   };
 
   if (!permission) {
-    return <div className="text-rose-500 font-bold p-4 bg-rose-50 rounded-lg">Please enable microphone access 🎤</div>;
+    return <div className="text-red-400 font-bold p-4 border border-red-500 bg-red-900/20 rounded-lg">MIC_ACCESS_DENIED</div>;
   }
 
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-8 w-full h-full">
-      <div className={`relative w-40 h-40 rounded-full flex items-center justify-center transition-all duration-500 ${isRecording ? 'bg-rose-50 shadow-[0_0_50px_rgba(251,113,133,0.4)]' : 'bg-gray-50 border border-gray-100'}`}>
+      <div className={`relative w-40 h-40 rounded-full flex items-center justify-center transition-all duration-500 ${isRecording ? 'bg-red-900/50 shadow-[0_0_50px_rgba(220,38,38,0.5)] border-2 border-red-500' : 'bg-slate-800 border-2 border-slate-600'}`}>
         {isRecording && (
-           <div className="absolute inset-0 rounded-full border-4 border-rose-300 animate-ping opacity-20"></div>
+           <div className="absolute inset-0 rounded-full border-4 border-red-500 animate-ping opacity-20"></div>
         )}
         
         {isRecording ? (
            <div className="flex gap-1 h-12 items-end justify-center">
-              <div className="w-2 bg-rose-400 rounded-full animate-[bounce_1s_infinite]"></div>
-              <div className="w-2 bg-rose-500 rounded-full animate-[bounce_1.2s_infinite]"></div>
-              <div className="w-2 bg-rose-400 rounded-full animate-[bounce_0.8s_infinite]"></div>
+              <div className="w-2 bg-red-400 rounded-full animate-[bounce_1s_infinite]"></div>
+              <div className="w-2 bg-red-500 rounded-full animate-[bounce_1.2s_infinite]"></div>
+              <div className="w-2 bg-red-400 rounded-full animate-[bounce_0.8s_infinite]"></div>
            </div>
         ) : audioUrl ? (
-          <AudioWaveform size={64} className="text-purple-400" />
+          <AudioWaveform size={64} className="text-cyan-400" />
         ) : (
-          <Mic size={64} className="text-gray-300" />
+          <Mic size={64} className="text-slate-500" />
         )}
       </div>
 
       <div className="flex gap-4">
         {!isRecording && !audioUrl && (
-          <RetroButton onClick={startRecording} variant="danger" className="rounded-full px-8 bg-rose-400 border-none text-white hover:bg-rose-500">
-             Record
+          <RetroButton onClick={startRecording} variant="danger" className="rounded-none border-red-500 bg-red-600/20 text-red-100 hover:bg-red-600">
+             REC ●
           </RetroButton>
         )}
         
         {isRecording && (
-          <RetroButton onClick={stopRecording} className="bg-white border-rose-200 text-rose-500 hover:bg-rose-50 rounded-full px-8">
-            <Square size={20} className="mr-2 inline fill-current" /> Stop
+          <RetroButton onClick={stopRecording} className="bg-slate-200 border-slate-400 text-slate-800 hover:bg-white rounded-none">
+            <Square size={20} className="mr-2 inline fill-current" /> STOP ■
           </RetroButton>
         )}
 
         {audioUrl && (
           <div className="flex flex-col items-center gap-4 animate-[fadeIn_0.5s]">
-            <audio src={audioUrl} controls className="w-64 h-10 rounded-full shadow-sm" />
-            <button onClick={reset} className="text-sm text-gray-400 hover:text-rose-500 flex items-center gap-1 transition-colors">
-              <RefreshCw size={14} /> Record Again
+            <audio src={audioUrl} controls className="w-64 h-8 rounded-sm" />
+            <button onClick={reset} className="text-sm text-cyan-500 hover:text-cyan-300 flex items-center gap-1 transition-colors uppercase tracking-wider font-bold">
+              <RefreshCw size={14} /> Reset
             </button>
           </div>
         )}

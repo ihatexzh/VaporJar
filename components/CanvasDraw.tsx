@@ -84,16 +84,16 @@ export const CanvasDraw: React.FC<CanvasDrawProps> = ({ onSave }) => {
 
   return (
     <div className="flex flex-col gap-3 w-full h-full">
-      <div className="flex gap-2 mb-1 justify-center bg-gray-50 p-2 rounded-full border border-gray-200">
+      <div className="flex gap-2 mb-1 justify-center bg-white/90 p-2 rounded-full border border-gray-200 shadow-sm">
         <button 
           onClick={() => setTool('pen')} 
-          className={`p-2 rounded-full transition-colors ${tool === 'pen' ? 'bg-pink-100 text-pink-600' : 'text-gray-400 hover:bg-gray-100'}`}
+          className={`p-2 rounded-full transition-colors ${tool === 'pen' ? 'bg-black text-white' : 'text-gray-400 hover:bg-gray-100'}`}
         >
           <Pencil size={18}/>
         </button>
         <button 
           onClick={() => setTool('eraser')} 
-          className={`p-2 rounded-full transition-colors ${tool === 'eraser' ? 'bg-pink-100 text-pink-600' : 'text-gray-400 hover:bg-gray-100'}`}
+          className={`p-2 rounded-full transition-colors ${tool === 'eraser' ? 'bg-black text-white' : 'text-gray-400 hover:bg-gray-100'}`}
         >
           <Eraser size={18}/>
         </button>
@@ -110,7 +110,7 @@ export const CanvasDraw: React.FC<CanvasDrawProps> = ({ onSave }) => {
           max="20" 
           value={lineWidth} 
           onChange={(e) => setLineWidth(Number(e.target.value))} 
-          className="w-20 accent-pink-400"
+          className="w-20 accent-black"
         />
         <div className="w-[1px] bg-gray-300 mx-1"></div>
         <button onClick={clearCanvas} className="p-2 rounded-full text-gray-400 hover:text-red-400 hover:bg-red-50"><Undo size={18}/></button>
@@ -124,7 +124,7 @@ export const CanvasDraw: React.FC<CanvasDrawProps> = ({ onSave }) => {
         onTouchStart={startDrawing}
         onTouchEnd={stopDrawing}
         onTouchMove={draw}
-        className="flex-grow w-full bg-white rounded-lg shadow-inner border border-gray-100 cursor-crosshair touch-none"
+        className="flex-grow w-full bg-white rounded-lg cursor-crosshair touch-none"
       />
     </div>
   );

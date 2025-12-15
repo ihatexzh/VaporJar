@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Settings, PenTool, Mic, Music, X, Sparkles, MessageCircle, Save, Heart } from 'lucide-react';
+import { Settings, PenTool, Mic, Music, X, Sparkles, MessageCircle, Save, Heart, Disc, Monitor, Zap } from 'lucide-react';
 import { Memory, MemoryType, ShapeType, OracleResponse } from './types';
 import { RetroWindow, RetroButton } from './components/RetroUI';
 import { CanvasDraw } from './components/CanvasDraw';
@@ -284,7 +284,7 @@ export default function App() {
 
     setTimeout(() => {
       setIsShaking(false);
-      playPopSound(); // Sound effect
+      playPopSound();
       const randomIndex = Math.floor(Math.random() * memories.length);
       setCurrentMemory(memories[randomIndex]);
       setOracleResult(null); // Reset oracle
@@ -295,6 +295,7 @@ export default function App() {
   const handleAskOracle = async () => {
     if (!currentMemory) return;
     setOracleLoading(true);
+    playRetroClick();
     const result = await consultOracle(currentMemory.content, currentMemory.type);
     setOracleResult(result);
     setOracleLoading(false);
@@ -348,41 +349,154 @@ export default function App() {
         </>
       )}
 
-      {/* Creator Modal */}
+      {/* Creator Modal - Y2K / Cyber Theme */}
       {mode === 'CREATING' && (
-        <div className="absolute inset-0 z-40 flex items-center justify-center p-4 bg-purple-900/10 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]">
+        <div className="absolute inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-[fadeIn_0.3s_ease-out]">
           <RetroWindow 
-            title="Design Your Memory" 
+            title="SYSTEM_MEMORY_WRITE.EXE" 
+            variant="cyber"
             onClose={() => setMode('IDLE')}
-            className="w-full max-w-2xl h-[85vh] shadow-2xl"
+            className="w-full max-w-2xl h-[85vh] shadow-[0_0_40px_rgba(192,38,211,0.25)]"
           >
             <div className="flex flex-col h-full gap-4 p-2">
-              {/* Type Selectors */}
-              <div className="flex justify-center gap-4 border-b border-pink-200 pb-4">
+              {/* Type Selectors - Game Console Style */}
+              <div className="grid grid-cols-3 gap-3 border-b-2 border-cyan-900/50 pb-4">
                 {[
-                  { type: MemoryType.TEXT, icon: MessageCircle, label: 'Text' },
-                  { type: MemoryType.DRAWING, icon: PenTool, label: 'Draw' },
-                  { type: MemoryType.AUDIO, icon: Mic, label: 'Voice' }
+                  { type: MemoryType.TEXT, icon: Monitor, label: 'TERMINAL' },
+                  { type: MemoryType.DRAWING, icon: PenTool, label: 'PAINT.EXE' },
+                  { type: MemoryType.AUDIO, icon: Disc, label: 'RECORDER' }
                 ].map((item) => (
                   <button 
                     key={item.type}
                     onClick={() => { playRetroClick(); setCreateType(item.type); }}
-                    className={`flex flex-col items-center gap-1 px-6 py-3 rounded-2xl border-2 transition-all ${
+                    className={`flex flex-col items-center gap-1 py-2 px-1 rounded-sm border-2 transition-all font-bold tracking-widest ${
                       createType === item.type 
-                      ? 'bg-pink-100 border-pink-400 text-pink-600 shadow-inner scale-95' 
-                      : 'bg-white border-white text-gray-400 hover:text-pink-400 hover:bg-pink-50'
+                      ? 'bg-cyan-600 border-cyan-400 text-black shadow-[0_0_15px_rgba(8,145,178,0.6)]' 
+                      : 'bg-slate-900 border-slate-700 text-slate-500 hover:text-cyan-400 hover:border-cyan-800'
                     }`}
                   >
-                    <item.icon size={24}/>
-                    <span className="text-lg">{item.label}</span>
+                    <item.icon size={20} />
+                    <span className="text-sm">{item.label}</span>
                   </button>
                 ))}
               </div>
 
-              {/* Shape Selector */}
-              <div className="flex items-center justify-center gap-4 bg-white/50 p-2 rounded-full border border-white mx-auto">
-                <span className="text-pink-400 uppercase tracking-widest text-lg px-2">Shape:</span>
-                {[ShapeType.RECT, ShapeType.CIRCLE, ShapeType.STAR].map(s => (
-                  <button 
-                    key={s}
-                    onClick={() => { playRetroClick(); setSelectedShape(s);
+              {/* Shape Selector - Neon Glyphs */}
+              <div className="flex items-center justify-center gap-6 py-2">
+                <span className="text-cyan-600 text-sm uppercase tracking-widest animate-pulse">Select Geometry:</span>
+                <div className="flex gap-4">
+                  {[ShapeType.RECT, ShapeType.CIRCLE, ShapeType.STAR].map(s => (
+                    <button 
+                      key={s}
+                      onClick={() => { playRetroClick(); setSelectedShape(s); }}
+                      className={`w-8 h-8 flex items-center justify-center transition-all ${selectedShape === s ? 'scale-125' : 'opacity-40 hover:opacity-80'}`}
+                    >
+                      <div 
+                        className={`w-full h-full border-2 ${selectedShape === s ? 'border-fuchsia-400 bg-fuchsia-500/20 shadow-[0_0_10px_magenta]' : 'border-slate-500'}`}
+                        style={s === ShapeType.CIRCLE ? {borderRadius: '50%'} : s === ShapeType.STAR ? {clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)', background: selectedShape === s ? '#e879f9' : 'transparent' } : {borderRadius: '2px'}}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Content Area - CRT Monitor Inset */}
+              <div className="flex-grow bg-black border-4 border-slate-700 rounded-lg shadow-[inset_0_0_20px_rgba(0,0,0,1)] relative overflow-hidden group">
+                 {/* Inner Monitor Glare */}
+                 <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-[0.03] rounded-bl-full pointer-events-none z-20"></div>
+                 
+                 {/* Content Wrapper */}
+                 <div className="w-full h-full p-4 relative z-10">
+                    {createType === MemoryType.TEXT && (
+                      <textarea 
+                        className="w-full h-full resize-none outline-none font-mono text-xl leading-relaxed bg-transparent text-green-400 placeholder-green-800 caret-green-400 selection:bg-green-900"
+                        placeholder="> INITIALIZE MEMORY SEQUENCE..."
+                        value={textContent}
+                        onChange={(e) => setTextContent(e.target.value)}
+                        autoFocus
+                      />
+                    )}
+                    {createType === MemoryType.DRAWING && (
+                      <div className="w-full h-full flex items-center justify-center bg-white/5 border border-white/10 rounded overflow-hidden">
+                         <CanvasDraw onSave={setMediaContent} />
+                      </div>
+                    )}
+                    {createType === MemoryType.AUDIO && (
+                      <div className="w-full h-full flex items-center justify-center">
+                         <AudioRecorder onSave={setMediaContent} />
+                      </div>
+                    )}
+                 </div>
+              </div>
+
+              {/* Actions - Cyber/Industrial Style */}
+              <div className="flex justify-between items-center pt-2">
+                 <button onClick={() => setMode('IDLE')} className="text-red-400 hover:text-red-300 font-bold uppercase tracking-widest text-sm hover:underline decoration-2 underline-offset-4">
+                   [ Abort ]
+                 </button>
+                 <RetroButton onClick={saveMemory} variant="cyber-action">
+                   <span className="flex items-center gap-2"><Save size={18} /> UPLOAD_MEMORY</span>
+                 </RetroButton>
+              </div>
+            </div>
+          </RetroWindow>
+        </div>
+      )}
+
+      {/* Viewing Modal (Kept clean for readability but with styled container) */}
+      {mode === 'VIEWING' && currentMemory && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-purple-900/20 backdrop-blur-md animate-[fadeIn_0.5s_ease-out]">
+          <div className="relative w-full max-w-lg perspective-[1000px]">
+            {/* The Memory Card */}
+            <div 
+              className={`bg-[#fff] p-8 shadow-[20px_20px_60px_#d1d1d1,-20px_-20px_60px_#ffffff] border border-white/80 relative transition-all duration-500 rounded-2xl flex flex-col items-center`}
+              style={{
+                minHeight: '350px',
+                transform: selectedShape === ShapeType.STAR ? 'rotate(-2deg)' : 'none',
+                backgroundColor: currentMemory.styleColor,
+              }}
+            >
+               {/* Decorative Washi Tape */}
+               <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-pink-300/50 rotate-1 backdrop-blur-sm z-10 shadow-sm"></div>
+
+               <div className="w-full mb-6 text-slate-500 font-bold tracking-widest text-sm border-b border-white/50 pb-2 flex justify-between">
+                 <span>{new Date(currentMemory.timestamp).toLocaleDateString()}</span>
+                 <span>#{currentMemory.id.slice(-4)}</span>
+               </div>
+
+               <div className={`w-full flex-grow flex items-center justify-center overflow-auto max-h-[50vh] transition-all`} style={currentMemory.shape === ShapeType.STAR ? { ...getShapeStyles(ShapeType.STAR), background: 'rgba(255,255,255,0.5)' } : {}}>
+                  {renderMemoryContent(currentMemory)}
+               </div>
+
+               {/* Oracle Section */}
+               <div className="w-full mt-6">
+                 {oracleResult ? (
+                   <div className="p-4 bg-white/60 backdrop-blur rounded-xl border border-white shadow-sm text-purple-800 font-['VT323'] text-lg animate-[fadeIn_0.5s]">
+                      <div className="uppercase font-bold mb-2 text-pink-500 flex items-center gap-2">
+                        <Sparkles size={16}/> Vibe Check
+                      </div>
+                      <p className="mb-2 italic">"{oracleResult.interpretation}"</p>
+                      <div className="text-right text-sm font-bold bg-pink-100 inline-block px-2 rounded-full float-right">Mood: {oracleResult.mood}</div>
+                   </div>
+                 ) : (
+                   <div className="flex justify-center">
+                     <RetroButton onClick={handleAskOracle} disabled={oracleLoading} variant="neon" className="w-full">
+                       {oracleLoading ? <span className="animate-pulse">Reading the stars...</span> : "Consult the Oracle"}
+                     </RetroButton>
+                   </div>
+                 )}
+               </div>
+            </div>
+
+            <button 
+              onClick={() => setMode('IDLE')}
+              className="absolute -top-4 -right-4 bg-white text-pink-400 w-12 h-12 rounded-full border-2 border-pink-200 shadow-lg flex items-center justify-center hover:scale-110 hover:bg-pink-50 transition-all z-50"
+            >
+              <X size={24} />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
